@@ -4,15 +4,33 @@
 	<title>Python web server</title>
 </head>
 <body>
-	<div>
-		<table>
-			<tr>
-				<td>NAME : </td>
-				<td>{{ name }}</td>
-			</tr>
+	<div style="width : 36%; margin-left: 32%; margin-right: 32%;">
+		<form action = "http://localhost:8004/submit/" method="POST">
+			<table style="border : 2px  solid; ">
 
-		
-		</table>
+				<tr>
+					<td>NAME : </td> <td><input type="text" name="name"></td>
+				</tr>
+				<tr>
+					<td>email : </td> <td><input type="email" name="email"></td>
+				</tr>
+				<tr>
+					<td>ADDRESS : </td> <td><input type="text" name="address"></td>
+				</tr>
+				<tr>
+					<td>MALE<input type="radio" name="gender" value="MALE"></td>
+					<td>FEMALE<input type="radio" name="gender" value="FEMALE"></td>
+				</tr>
+				<tr>
+					<td>PASSWORD : </td> <td><input type="password" name="password"></td>
+				</tr>
+				<tr>
+					<td>CONFIRM PASSWORD : </td> <td><input type="password" name="confirm_password"></td>
+				</tr>
+				<tr><td><input type="submit" value = "SUBMIT"></td></tr>
+				
+			</table>
+		</form>
 	</div>
 </body>
 </html>
