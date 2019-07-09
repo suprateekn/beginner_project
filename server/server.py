@@ -21,8 +21,37 @@ class Server(BaseHTTPRequestHandler):
 			queries[q[0]] = q[1]
 			
 		print(queries)
-		if queries['password'] == queries[confirm_password]:
-			bdo.inserting(queries)
+		print(type(self.path))
+		if queries['password'] != queries['confirm_password'] :
+			content_type = "text/html"
+			env = Environment(loader=FileSystemLoader('%s/template/' % '/home/mindfire/Projects/beginner_project/server'), autoescape = select_autoescape(['html','css']))
+			temp = env.get_template('index.html')
+			if queries['gender'] == 'MALE':
+				response_content = temp.render(name = queries['name'], email = queries['email'], address = queries['address'], MALE = 'checked', hidden_email_text = 'hidden')
+			else:
+				response_content = temp.render(name = queries['name'], email = queries['email'], address = queries['address'], FEMALE = 'checked', hidden_email_text = 'hidden')
+			self.send_response(200)
+			self.send_header('Content-type', content_type)
+			self.end_headers()
+			self.wfile.write(bytes(response_content, "UTF-8"))
+
+		email_list = bdo.get_email_id_list()
+		print(email_list)
+		if queries['email'] in email_list:
+			content_type = "text/html"
+			env = Environment(loader=FileSystemLoader('%s/template/' % '/home/mindfire/Projects/beginner_project/server'), autoescape = select_autoescape(['html','css']))
+			temp = env.get_template('index.html')
+			if queries['gender'] == 'MALE':
+				response_content = temp.render(name = queries['name'],  address = queries['address'], MALE = 'checked', hidden_password = 'hidden')
+			else:
+				response_content = temp.render(name = queries['name'],  address = queries['address'], FEMALE = 'checked', hidden_password = 'hidden')
+			self.send_response(200)
+			self.send_header('Content-type', content_type)
+			self.end_headers()
+			self.wfile.write(bytes(response_content, "UTF-8"))			
+
+		
+		bdo.inserting(queries)
 		self.send_response(200)
 		self.send_header('Content-type', 'text/html')
 		self.end_headers()
@@ -31,24 +60,26 @@ class Server(BaseHTTPRequestHandler):
 	def do_GET(self):
 		self.respond()
 
+	def get(self):
+		pass
+
 	def handle_http(self):
 		status = 200
 		content_type = "text/plain"
 		response_content = ""
 
 		if self.path in routes:
-			print(routes[self.path])
+			# print(routes[self.path])
 			url = "localhost:8004/"
 			route_content = routes[self.path]['template']
 			filepath = Path("template/{}".format(route_content))
 			print(filepath.is_file())
 			if filepath.is_file():
 				content_type = "text/html"
-				env = Environment(loader=FileSystemLoader('%s/template/' % '/home/suprateek/Projects/beginner_project/server'), autoescape = select_autoescape(['html','css']))
+				env = Environment(loader=FileSystemLoader('%s/template/' % '/home/mindfire/Projects/beginner_project/server'), autoescape = select_autoescape(['html','css']))
 				temp = env.get_template('index.html')
-				response_content = temp.render()
-				# name_from_db = fetch_from_db.fetch_name()
-				# response_content = (temp.render(name = name_from_db))
+				response_content = temp.render(hidden_password = 'hidden', hidden_email_text = 'hidden')
+				
 			else:
 				content_type = "text/plain"
 				response_content = "404 NOT FOUND"

@@ -5,21 +5,21 @@
 </head>
 <body>
 	<div style="width : 36%; margin-left: 32%; margin-right: 32%;">
-		<form action = "http://localhost:8004/submit/" method="POST">
+		<form action = "http://localhost:8004/" method="POST">
 			<table style="border : 2px  solid; ">
 
 				<tr>
-					<td>NAME : </td> <td><input type="text" name="name"></td>
+					<td>NAME : </td> <td><input type="text" name="name" value="{{ name }}"></td>
 				</tr>
 				<tr>
-					<td>email : </td> <td><input type="email" name="email"></td>
+					<td>email : </td> <td><input type="email" name="email" value="{{ email }}"></td>
 				</tr>
 				<tr>
-					<td>ADDRESS : </td> <td><input type="text" name="address"></td>
+					<td>ADDRESS : </td> <td><input type="text" name="address" value="{{ address }}"></td>
 				</tr>
 				<tr>
-					<td>MALE<input type="radio" name="gender" value="MALE"></td>
-					<td>FEMALE<input type="radio" name="gender" value="FEMALE"></td>
+					<td>MALE<input type="radio" name="gender" value="MALE" {{ MALE }}></td>
+					<td>FEMALE<input type="radio" name="gender" value="FEMALE" {{ FEMALE }}></td>
 				</tr>
 				<tr>
 					<td>PASSWORD : </td> <td><input type="password" name="password"></td>
@@ -27,7 +27,16 @@
 				<tr>
 					<td>CONFIRM PASSWORD : </td> <td><input type="password" name="confirm_password"></td>
 				</tr>
+				<tr>
+					<td>
+						<p {{ hidden_password }} style="color: red;"> The password and confirm password must match!</p>
+						<p {{ hidden_email_text }} style="color: red;">
+							Email ID already registered with  another account!
+						</p>
+					</td>
+				</tr>
 				<tr><td><input type="submit" value = "SUBMIT"></td></tr>
+
 				
 			</table>
 		</form>
