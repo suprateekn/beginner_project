@@ -4,5 +4,8 @@ routes = {
 
   "/goodbye" : {"template" : "goodbye.html"},
 
-  "/save" : "Thanks"
+  "/submit" : "Thanks",
+
+  "/login" : {"template" : "login.html"},
+  "/logout/?" : {"template" : "login.html"}
 }
