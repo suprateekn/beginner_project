@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<link href="/stylesheet.css" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	
+	<title>Blog In</title>	
+</head>
+<body style="background-image: url('/Grey-Gradient-Background.jpg'); background-repeat: repeat-x;">
+
+	<div class = "container">
+		<ul class="nav justify-content-end nav-tabs">
+		    <li class="nav-item">
+		    	<a class="nav-link links" href="/">HOME</a>
+		    </li>
+		    <li class="nav-item">
+		    	<a class="nav-link links" href="/login">LOGIN</a>
+		    </li>
+		    <li class="nav-item">
+		      	<a class="nav-link links" href="#">SIGN UP</a>
+		    </li>
+		</ul>
+	</div>
+
+
+	<div class="forms mx-auto responsive_width">
+	<div style="padding: 10px;">
+		
+		<h2 class = "text-center" >SIGN UP</h2>
+		<hr style="border-top: solid green;">
+		<form action = "http://localhost:8004/submit" method="POST">
+			<div class="form-group">
+				<label for="fn_usr" class = "labels">First Name:</label>
+			  	<input type="text" name="first_name" class="form-control" id="fn_usr" required>
+			</div>
+			<div class="form-group">
+				<label for="ln_usr" class = "labels">Last Name:</label>
+			  	<input type="text" name="last_name" class="form-control" id="ln_usr" required>
+			</div>			
+			<div class="form-group">
+				<label for="usr" class = "labels">User Name:</label>
+			  	<input type="text" name="user_name" class="form-control" id="usr" required>
+			</div>
+			<div class="form-group">
+			    <label for="email" class = "labels">Email address:</label>
+			    <input type="email" name="user_email" class="form-control" id="email" required>
+			</div>
+			<div class="form-group">
+				<label for="adrs" class = "labels">Address:</label>
+			  	<input type="text" name="address" class="form-control" id="adrs" required>
+			</div>
+			<div><label class = "labels">Gender:</label></div>
+			<div class="form-check-inline">
+  				<label class="form-check-label">
+    				<input type="radio" class="form-check-input" name="gender">MALE
+  				</label>
+			</div>
+			<div class="form-check-inline">
+  				<label class="form-check-label">
+    				<input type="radio" class="form-check-input" name="gender">FEMALE
+ 				</label>
+			</div>
+			<div class="form-group">
+			    <label for="pwd" class = "labels">Password:</label>
+			    <input type="password" name="password" class="form-control" id="pwd">
+  			</div>
+			<div class="form-group">
+			    <label for="confirm_pwd" class = "labels">Confirm Password:</label>
+			    <input type="password" name="confirm_password" class="form-control" id="cnfirm_pwd" required>
+  			</div>	  
+  			<input type="submit" class="btn btn-info" value="SUBMIT">			
+		</form>
+	<div>
+	</div>
+</body>
+</html>
+		<p hidden style="color: red;"> The password and confirm password must match!</p>
+		<p  hidden style="color: red;">
+			Email ID already registered with  another account!
+		</p>
