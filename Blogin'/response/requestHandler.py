@@ -1,14 +1,11 @@
-class MockFile():
-    def read(self):
-        return False
-        
 class RequestHandler():
 
     """Getters and setters for Status, Content Type and Content"""
+
     def __init__(self):
 
         self.contentType = ""
-        self.contents = MockFile()
+        self.contents = False
 
     def getContents(self):
         return self.contents if hasattr(self, 'contents') else b'0'

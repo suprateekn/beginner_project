@@ -5,8 +5,9 @@
 </head>
 <body>
 		<p>Welcome!!</p>
-		<form action = "http://localhost:8004/logout/" method = "GET">
+		<form action = "http://localhost:8004/login" method = "GET">
 			<button type="submit">Logout</button>
+			<input type="hidden" name="user_email" value = "{{ user_email }}">
 		</form>
 </body>
 </html>
