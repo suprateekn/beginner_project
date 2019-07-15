@@ -3,7 +3,6 @@ from routes.main import routes
 from pathlib import Path
 from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoader
 import urllib.parse
-import sessions_db
 import requests
 import server_utils as su
 from response.requestHandler import RequestHandler
