@@ -23,15 +23,21 @@ class Server(BaseHTTPRequestHandler):
             queries = su.get_query_string(self, content_len)
             print(queries)
 
-        if 'logout' in self.path:
+        if '/home' == self.path:
             response_content = bdo.check_valid_user(queries)
             su.write_response(self, response_content)
 
-        if 'submit' in self.path:
+        elif 'submit' in self.path:
             if su.check_pwd_confirm_pwd(self, queries) and su.check_unique(self, queries, 'user_name') and su.check_unique(self, queries, 'user_email'):
                 bdo.inserting(queries)
                 response_content = su.for_signup()
                 su.write_response(self, response_content)
+
+        elif '/home/' == self.path:
+            bdo.insert_into_blog_info(queries)
+            response_content = su.for_login(queries)
+            su.write_response(self, response_content)
+
 
     def do_GET(self):
         """Overridden method of the BaseHTTPRequestHandler class that is called when a GET request is made. 

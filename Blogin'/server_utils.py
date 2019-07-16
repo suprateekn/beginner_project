@@ -36,8 +36,11 @@ def for_login(queries):
     Returns:
             string: The content to be written to the browser.
     """
+    u_name = bdo.fetch_from_db('user_name', 'user_info', 'user_email', queries['email'])
+    title = bdo.fetch_multiple_vals_from_db('title', 'blog_info', 'user_name', u_name)
+    content = bdo.fetch_multiple_vals_from_db('substring(content,1,10)', 'blog_info', 'user_name', u_name)
     response_content = render_content(
-        'logout.html', user_email=queries['email'])
+        'home.html', user_email=queries['email'], user_name = u_name, title = title, content = content)
     return response_content
 
 
@@ -51,7 +54,7 @@ def for_signup():
     return response_content
 
 
-def render_content(template, user_email='', hidden_password_field='hidden', hidden_email_text_field='hidden', hidden_user_name_field='hidden'):
+def render_content(template,content = '', title='', user_name = '',user_email='', hidden_password_field='hidden', hidden_email_text_field='hidden', hidden_user_name_field='hidden'):
     """Renders the files using jinja2 module
 
     Args:
@@ -65,7 +68,8 @@ def render_content(template, user_email='', hidden_password_field='hidden', hidd
     env = Environment(loader=FileSystemLoader(
         '%s/template/' % "/home/mindfire/Projects/beginner_project/Blogin'"), autoescape=select_autoescape(['html', 'css']))
     temp = env.get_template(template)
-    response_content = temp.render(hidden='hidden', user_email=user_email, hidden_password=hidden_password_field,
+    
+    response_content = temp.render(title = title,length_iterable = range(len(title)), content = content, hidden='hidden',user_name = user_name, user_email=user_email, hidden_password=hidden_password_field,
                                    hidden_email_text=hidden_email_text_field, hidden_user_name=hidden_user_name_field)
     return response_content
 
@@ -87,7 +91,7 @@ def check_pwd_confirm_pwd(self, queries):
         else:
             response_content = temp.render(first_name=queries['first_name'], last_name=queries['last_name'], user_name=queries['user_name'],
                                            user_email=queries['user_email'], address=queries['address'], FEMALE='checked', hidden_email_text='hidden', hidden_user_name='hidden')
-        swrite_response(self, response_content)
+        write_response(self, response_content)
         return False
     return True
 
@@ -136,3 +140,4 @@ def write_response(self, response_content):
     self.send_header('Content-type', 'text/html')
     self.end_headers()
     self.wfile.write(bytes(response_content, "UTF-8"))
+    return

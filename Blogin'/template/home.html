@@ -1,0 +1,53 @@
+</!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<link href="/stylesheet.css" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	
+	<title>Blog In</title>
+</head>
+<body style="background-image: url('/Grey-Gradient-Background.jpg');">
+	<div class="container row">
+		<div class="col-md-6">
+			<h2 style="color: green; padding-top: 20px;">Hello {{ user_name }}</h2>
+			<div id = "blog_list">
+				<h5 style="color: lightgreen;"><u>Your Blogs:</u></h4>
+				<dl>
+				{% for t in title %}
+					<dt><a href="http://localhost:8004/home/{{ t[0] }}">{{ t[0] }}</a></dt>
+				
+				{% endfor %}
+				</dl>
+			</div>
+			<form action="http://localhost:8004/login" method="GET">
+				<button type="submit">Logout</button>
+				<input type="hidden" name="user_email" value = "{{ user_email }}">			
+			</form>
+		</div>		
+		<div class="col-md-6" >
+			<form action = "http://localhost:8004/home/" method = "POST">
+				<div style=" padding-top: 20px;">
+					<textarea rows="1" cols="51" style=" background-color: #eaeae1; font-size: 25px; border : none;" placeholder="Title" name="title"></textarea>
+				</div>
+
+				<div>
+					<textarea rows="22" cols="79" style=" background-color: #eaeae1; border : none;"placeholder="Content" name="blog" ></textarea>
+				</div>
+				<div>
+					<input type="hidden" name="user_name" value = '{{ user_name }}'>
+					<input type="hidden" name="email" value = '{{ user_email }}'>
+				</div>
+				<input type="submit" value="DONE">
+			</form>
+		</div>
+
+	</div>
+</body>
+</html>
