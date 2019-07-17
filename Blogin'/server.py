@@ -38,6 +38,8 @@ class Server(BaseHTTPRequestHandler):
             response_content = su.for_login(queries)
             su.write_response(self, response_content)
 
+          
+
 
     def do_GET(self):
         """Overridden method of the BaseHTTPRequestHandler class that is called when a GET request is made. 
@@ -47,19 +49,30 @@ class Server(BaseHTTPRequestHandler):
         request_extension = split_path[1]
 
         if '/login?' in self.path:
-            print("hi")
             user_email = self.path.split("=")[1]
-            sd.delete_after_logout(urllib.parse.unquote(user_email))
+            sd.delete_after_logout(urllib.parse.unquote(user_email).strip("(),'"))
             handler = TemplateHandler()
             handler.find(routes['/login'])
+
+        elif '/blog' in self.path:
+            response_content = su.for_login(path = self.path)
+            su.write_response(self, response_content)  
+            return   
+        elif '/home?' in self.path:
+            response_content = su.for_login(path = self.path)
+            su.write_response(self, response_content)  
+            return             
+
         elif request_extension is "" or request_extension is ".html":
             if self.path in routes:
                 handler = TemplateHandler()
                 handler.find(routes[self.path])
             else:
                 handler = BadRequestHandler()
+
         elif request_extension is ".py":
             handler = BadRequestHandler()
+
         else:
             handler = StaticHandler()
             handler.find(self.path)

@@ -6,6 +6,7 @@ import urllib.parse
 import requests
 import blogin_db_operations as bdo
 import sessions_db as sd
+from datetime import datetime
 
 
 def get_query_string(self, content_len):
@@ -24,10 +25,11 @@ def get_query_string(self, content_len):
     for query in queries_list:
         q = query.split("=")
         queries[q[0]] = q[1]
+    print(queries)
     return queries
 
 
-def for_login(queries):
+def for_login(queries=None, path = ''):
     """Renders the files for required for login page using render_content()
 
     Args:
@@ -36,11 +38,22 @@ def for_login(queries):
     Returns:
             string: The content to be written to the browser.
     """
-    u_name = bdo.fetch_from_db('user_name', 'user_info', 'user_email', queries['email'])
-    title = bdo.fetch_multiple_vals_from_db('title', 'blog_info', 'user_name', u_name)
-    content = bdo.fetch_multiple_vals_from_db('substring(content,1,10)', 'blog_info', 'user_name', u_name)
+    blog_content = ''
+    if 'blog' in path:
+        blog_id = path.split('blog/')[1]
+        u_name = bdo.fetch_from_db('user_name', 'blog_info', 'id', blog_id)
+        email = bdo.fetch_from_db('user_email', 'user_info', 'user_name', u_name[0])
+        blog_content = bdo.fetch_from_db('title, content', 'blog_info', 'id' ,blog_id)
+    elif 'home?' in path:
+        user_email = path.split("=")[1]
+        email = urllib.parse.unquote(user_email).strip("(),'")
+        u_name = bdo.fetch_from_db('user_name', 'user_info', 'user_name', email)
+    else:
+        u_name = bdo.fetch_from_db('user_name', 'user_info', 'user_email', queries['email'])
+        email = queries['email']
+    vals = bdo.fetch_multiple_vals_from_db('title, content, date(date), id', 'blog_info', 'user_name', u_name[0])
     response_content = render_content(
-        'home.html', user_email=queries['email'], user_name = u_name, title = title, content = content)
+        'home.html', user_email=email, user_name = u_name, values = vals, blog_content = blog_content)
     return response_content
 
 
@@ -54,7 +67,7 @@ def for_signup():
     return response_content
 
 
-def render_content(template,content = '', title='', user_name = '',user_email='', hidden_password_field='hidden', hidden_email_text_field='hidden', hidden_user_name_field='hidden'):
+def render_content(template,blog_content='', values = '', user_name = '',user_email='', hidden_password_field='hidden', hidden_email_text_field='hidden', hidden_user_name_field='hidden'):
     """Renders the files using jinja2 module
 
     Args:
@@ -69,7 +82,7 @@ def render_content(template,content = '', title='', user_name = '',user_email=''
         '%s/template/' % "/home/mindfire/Projects/beginner_project/Blogin'"), autoescape=select_autoescape(['html', 'css']))
     temp = env.get_template(template)
     
-    response_content = temp.render(title = title,length_iterable = range(len(title)), content = content, hidden='hidden',user_name = user_name, user_email=user_email, hidden_password=hidden_password_field,
+    response_content = temp.render(values = values,blog_content=blog_content, hidden='hidden',user_name = user_name, user_email=user_email, hidden_password=hidden_password_field,
                                    hidden_email_text=hidden_email_text_field, hidden_user_name=hidden_user_name_field)
     return response_content
 

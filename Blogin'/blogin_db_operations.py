@@ -89,7 +89,7 @@ def fetch_from_db(col, tab_name, where_attr, val):
     res = cur.fetchone() 
 
     
-    return res[0]
+    return res
 
 def fetch_multiple_vals_from_db(col, tab_name, where_attr, val):
     """Fetch the desired column of the user logged in.

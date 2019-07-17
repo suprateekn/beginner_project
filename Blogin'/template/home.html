@@ -12,17 +12,39 @@
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 	
 	<title>Blog In</title>
+
+	<style type="text/css">
+		#date_published
+		{
+			font-size: 10px;
+			color: darkgrey;
+			display: inline;
+		}
+
+		#greeting
+		{
+			color: green;
+			padding-top: 20px;
+		}
+	</style>
 </head>
 <body style="background-image: url('/Grey-Gradient-Background.jpg');">
 	<div class="container row">
 		<div class="col-md-6">
-			<h2 style="color: green; padding-top: 20px;">Hello {{ user_name }}</h2>
+			<h2 id="greeting">Hello {{ user_name[0] }}</h2>
+		
+
+			<form action="http://localhost:8004/login" method="GET">
+				<button type="submit">Logout</button>
+				<button formaction="http://localhost:8004/home">Write a new blog</button>
+				<input type="hidden" name="user_email" value = "{{ user_email }}">			
+			</form>
 			<div id = "blog_list">
 				<h5 style="color: lightgreen;"><u>Your Blogs:</u></h4>
 				<dl>
-				{% for t in title %}
-					<dt><a href="http://localhost:8004/home/{{ t[0] }}">{{ t[0] }}</a></dt>
-				
+				{% for v in values %}
+					<dt><a href="http://localhost:8004/home/blog/{{ v[3] }}">{{ v[0] }}</a> <p id="date_published">[Date published: {{ v[2] }}]</p></dt>
+					<dd style="margin-left: 20px !important;">- {{ v[1] }}</dd>				
 				{% endfor %}
 				</dl>
 			</div>
@@ -34,14 +56,14 @@
 		<div class="col-md-6" >
 			<form action = "http://localhost:8004/home/" method = "POST">
 				<div style=" padding-top: 20px;">
-					<textarea rows="1" cols="51" style=" background-color: #eaeae1; font-size: 25px; border : none;" placeholder="Title" name="title"></textarea>
+					<textarea rows="1" cols="51" style=" background-color: #eaeae1; font-size: 25px; border : none;" placeholder="Title" name="title" required >{{ blog_content[0] }}</textarea>
 				</div>
 
 				<div>
-					<textarea rows="22" cols="79" style=" background-color: #eaeae1; border : none;"placeholder="Content" name="blog" ></textarea>
+					<textarea rows="22" cols="79" style=" background-color: #eaeae1; border : none;"placeholder="Content" name="blog" required >{{ blog_content[1] }}</textarea>
 				</div>
 				<div>
-					<input type="hidden" name="user_name" value = '{{ user_name }}'>
+					<input type="hidden" name="user_name" value = '{{ user_name[0] }}'>
 					<input type="hidden" name="email" value = '{{ user_email }}'>
 				</div>
 				<input type="submit" value="DONE">
