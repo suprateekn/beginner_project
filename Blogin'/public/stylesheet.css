@@ -28,7 +28,13 @@
 	letter-spacing: 2px;
 }
 
-li:hover
+li:hover, a:hover
 {
 	background-color: lightgreen;
+}
+
+
+a:active
+{
+	color: blue;
 }

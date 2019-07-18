@@ -28,13 +28,16 @@ class Server(BaseHTTPRequestHandler):
             su.write_response(self, response_content)
 
         elif 'submit' in self.path:
-            if su.check_pwd_confirm_pwd(self, queries) and su.check_unique(self, queries, 'user_name') and su.check_unique(self, queries, 'user_email'):
+            if su.check_pwd_confirm_pwd(self, queries) and su.check_unique(self, queries, 'user_name', 'user_info') and su.check_unique(self, queries, 'user_email', 'user_info'):
                 bdo.inserting(queries)
                 response_content = su.for_signup()
                 su.write_response(self, response_content)
 
         elif '/home/' == self.path:
-            bdo.insert_into_blog_info(queries)
+            if su.check_unique(self, queries, 'title', 'blog_info') and su.check_unique(self, queries, 'content', 'blog_info'):
+                bdo.insert_into_blog_info(queries)
+            else:
+                bdo.update_blog(queries)
             response_content = su.for_login(queries)
             su.write_response(self, response_content)
 

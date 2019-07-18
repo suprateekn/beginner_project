@@ -47,10 +47,11 @@ def for_login(queries=None, path = ''):
     elif 'home?' in path:
         user_email = path.split("=")[1]
         email = urllib.parse.unquote(user_email).strip("(),'")
-        u_name = bdo.fetch_from_db('user_name', 'user_info', 'user_name', email)
+        u_name = bdo.fetch_from_db('user_name', 'user_info', 'user_email', email)
     else:
         u_name = bdo.fetch_from_db('user_name', 'user_info', 'user_email', queries['email'])
         email = queries['email']
+
     vals = bdo.fetch_multiple_vals_from_db('title, content, date(date), id', 'blog_info', 'user_name', u_name[0])
     response_content = render_content(
         'home.html', user_email=email, user_name = u_name, values = vals, blog_content = blog_content)
@@ -82,7 +83,7 @@ def render_content(template,blog_content='', values = '', user_name = '',user_em
         '%s/template/' % "/home/mindfire/Projects/beginner_project/Blogin'"), autoescape=select_autoescape(['html', 'css']))
     temp = env.get_template(template)
     
-    response_content = temp.render(values = values,blog_content=blog_content, hidden='hidden',user_name = user_name, user_email=user_email, hidden_password=hidden_password_field,
+    response_content = temp.render(values = values, blog_content=blog_content, hidden='hidden',user_name = user_name, user_email=user_email, hidden_password=hidden_password_field,
                                    hidden_email_text=hidden_email_text_field, hidden_user_name=hidden_user_name_field)
     return response_content
 
@@ -109,36 +110,41 @@ def check_pwd_confirm_pwd(self, queries):
     return True
 
 
-def check_unique(self, queries, attribute):
+def check_unique(self, queries, attribute, table_name):
     """Checks for unique user_name and email and if not received asks the user for re-entry
 
     Args:
             queries (dict): The dictionary of query strings
             attribute (string): user_name or email
     """
-    list_of_all = bdo.get_list(attribute)
-    print(list_of_all)
+    print(attribute)
+    list_of_all = bdo.get_list(attribute, table_name)
+
     if queries[attribute] in list_of_all:
-        content_type = "text/html"
-        env = Environment(loader=FileSystemLoader(
-            '%s/template/' % "/home/mindfire/Projects/beginner_project/Blogin'"), autoescape=select_autoescape(['html', 'css']))
-        temp = env.get_template('signup.html')
-        if attribute == 'user_email':
-            if queries['gender'] == 'MALE':
-                response_content = temp.render(first_name=queries['first_name'], last_name=queries['last_name'], user_name=queries['user_name'],
-                                               address=queries['address'], MALE='checked', hidden_password='hidden', hidden_user_name='hidden')
-            else:
-                response_content = temp.render(first_name=queries['first_name'], last_name=queries['last_name'], user_name=queries['user_name'],
-                                               address=queries['address'], FEMALE='checked', hidden_password='hidden', hidden_user_name='hidden')
+        print(queries[attribute])
+        if attribute == 'title' or attribute == 'content':
+            return False
         else:
-            if queries['gender'] == 'MALE':
-                response_content = temp.render(first_name=queries['first_name'], last_name=queries['last_name'], user_email=queries['user_email'],
-                                               address=queries['address'], MALE='checked', hidden_password='hidden', hidden_email_text='hidden')
-            else:
-                response_content = temp.render(first_name=queries['first_name'], last_name=queries['last_name'], user_email=queries['user_email'],
-                                               address=queries['address'], FEMALE='checked', hidden_password='hidden', hidden_email_text='hidden')
-        write_response(self, response_content)
-        return False
+            content_type = "text/html"
+            env = Environment(loader=FileSystemLoader(
+                '%s/template/' % "/home/mindfire/Projects/beginner_project/Blogin'"), autoescape=select_autoescape(['html', 'css']))
+            temp = env.get_template('signup.html')
+            if attribute == 'user_email':
+                if queries['gender'] == 'MALE':
+                    response_content = temp.render(first_name=queries['first_name'], last_name=queries['last_name'], user_name=queries['user_name'],
+                                                   address=queries['address'], MALE='checked', hidden_password='hidden', hidden_user_name='hidden')
+                else:
+                    response_content = temp.render(first_name=queries['first_name'], last_name=queries['last_name'], user_name=queries['user_name'],
+                                                   address=queries['address'], FEMALE='checked', hidden_password='hidden', hidden_user_name='hidden')
+            elif attribute == 'user_name':
+                if queries['gender'] == 'MALE':
+                    response_content = temp.render(first_name=queries['first_name'], last_name=queries['last_name'], user_email=queries['user_email'],
+                                                   address=queries['address'], MALE='checked', hidden_password='hidden', hidden_email_text='hidden')
+                else:
+                    response_content = temp.render(first_name=queries['first_name'], last_name=queries['last_name'], user_email=queries['user_email'],
+                                                   address=queries['address'], FEMALE='checked', hidden_password='hidden', hidden_email_text='hidden')
+            write_response(self, response_content)
+            return False
 
     return True
 

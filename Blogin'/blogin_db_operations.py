@@ -30,7 +30,7 @@ def inserting(q):
     mydb.commit()
 
 
-def get_list(attribute):
+def get_list(attribute, tab_name):
     """Get the list of all the rows of the specified column from the user_info table
     
     Args:
@@ -40,7 +40,7 @@ def get_list(attribute):
         list : list of all the rows of the specified col
     """
     cur = mydb.cursor()
-    cur.execute(f"select {attribute} from user_info")
+    cur.execute(f"select {attribute} from {tab_name}")
     res = cur.fetchall()
     r = []
     for x in res:
@@ -110,14 +110,23 @@ def fetch_multiple_vals_from_db(col, tab_name, where_attr, val):
 
 def insert_into_blog_info(q):
     cur = mydb.cursor()
-    now = datetime.now()
-    formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
     sql = "insert into blog_info (title, content, user_name, date) values (%s, %s, %s, %s)"
     val = []
     for v in q.values():
         val.append(v)
-    val = val[:-1]
-    val.append(formatted_date)
+    val = val
     val = tuple(val)
     cur.execute(sql, val)
+    mydb.commit()
+
+def update_blog(q):
+    cur = mydb.cursor()
+    cur.execute(f"select content from blog_info where title = '{q['title']}' and user_name = '{q['user_name']}'")
+    if cur.fetchone():
+        sql ="update blog_info set content = %s where title = %s"
+        vals = [q['content'], q['title']]
+    else:
+        sql ="update blog_info set title = %s where content = %s"
+        vals = [q['title'], q['content']]
+    cur.execute(sql,vals)
     mydb.commit()
