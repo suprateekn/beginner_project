@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-sm-3 col-md-6 col-lg-4 " style="background-color: #1b6d85">
+        <div class="card w-100" style="background-color: #1b6d85">
+            <div class="card-header">
+                <div class="input-group w-100">
+                    <input type="search" placeholder="Search..." name="search" class="search form-control">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-sm-9 col-md-6 col-lg-8 " style="background-color: #1b8dbb">
+        <div class="card w-100">
+            <div class="card-header">
+
+            </div>
+            <div class="card-body">
+                <ul id="msg">
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    $("document").ready(function () {
+        console.log('hi');
+        $.ajax({
+            type: "GET",
+            url: "{% url 'chit_chat:list-msg' %}",
+            success: function (data) {
+                console.log(data);
+                count = Object.keys(data).length;
+                for (i = 0; i < count; i++) {
+                    var txt = $("<li></li>").text(data[i]['text_msg']);
+                    $("#msg").append(txt);
+                }
+            },
+            error: function (xhr) {
+                alert("error");
+            }
+        });
+    });
+</script>
+
+{% endblock %}
