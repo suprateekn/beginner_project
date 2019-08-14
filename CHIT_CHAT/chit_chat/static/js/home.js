@@ -12,7 +12,8 @@ $("document").ready(function () {
                 if (user != id) {
                     var user_ids = "#" + id;
                     $("#user_details").clone().removeClass('d-none').appendTo("ui.contacts").attr("id", id);
-                    $("#" + id).find(".user_info").find(".user_name").html(display_name);
+                    $(user_ids).find(".user_info").find(".user_name").html(display_name);
+                    console.log($(user_ids));
                     $(user_ids).on('click', function (event) {
                         body_children = $(".msg_card_body").children();
                         body_len = body_children.length;
@@ -60,10 +61,7 @@ $("document").ready(function () {
         $.ajax({
             type: "POST",
             url: msg_url,
-            data: {
-                text_msg: $("#type_msg").val(),
-                receiver: $("#sender_user_id").val()
-            },
+            data: {text_msg: $("#type_msg").val(), receiver: $("#sender_user_id").val()},
             success: function (msg) {
                 $("#type_msg").val("");
                 let sender_user = msg['sender'];

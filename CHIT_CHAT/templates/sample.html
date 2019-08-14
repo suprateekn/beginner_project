@@ -14,7 +14,8 @@
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet"
+          id="bootstrap-css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 </head>
 
@@ -105,14 +106,15 @@
                 </div>
                 <div class="card-footer">
                     <div class="input-group">
-<!--                        <div class="input-group-append">-->
-<!--                            <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>-->
-<!--                        </div>-->
+                        <!--                        <div class="input-group-append">-->
+                        <!--                            <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>-->
+                        <!--                        </div>-->
                         <input type="hidden" value="" id="sender_user_id">
-                        <textarea name="" class="form-control type_msg" id="type_msg" placeholder="Type your message..." onkeypress="confirmEnter()"></textarea>
+                        <textarea name="" class="form-control type_msg" id="type_msg" placeholder="Type your message..."
+                                  onkeypress="confirmEnter()"></textarea>
                         <div class="input-group-append">
                             <button id="submit_chat">
-                            <span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
+                                <span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
                             </button>
                         </div>
                     </div>
@@ -126,7 +128,7 @@
     let msg_url = "{% url 'chit_chat:list-msg' %}";
     let user_url = "{% url 'chit_chat:list-user' %}";
 </script>
-<!--<script type="text/javascript" src="{% static 'js/sample.js' %}"></script>-->
-<script type="text/javascript" src="{% static 'js/home.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/sample.js' %}"></script>
+{#<script type="text/javascript" src="{% static 'js/home.js' %}"></script>#}
 </body>
 </html>
