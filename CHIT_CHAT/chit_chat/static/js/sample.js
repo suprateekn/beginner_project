@@ -58,6 +58,8 @@ function getMessage(users) {
                     .then(result => renderMessage(result))
                     .then((client) => writeMessage(client))
                     .catch(err => console.log(err));
+
+                keepRendering(new_msg_url, client);
             });
         }
     });
@@ -65,7 +67,10 @@ function getMessage(users) {
 
 
 function renderMessage(msg) {
+    let content_len = msg.length;
+    localStorage.setItem("content_len", content_len);
     let client = localStorage.getItem("client");
+    let len = Object.keys(msg).length - 1;
 
     msg.forEach(function (item, index) {
         let txt_msg = item['text_msg'];
@@ -76,11 +81,21 @@ function renderMessage(msg) {
         if (sender_user == user && receiver_user == client) {
             $("#sender").clone().removeClass('d-none').appendTo(".msg_card_body").attr("id", "sender" + index);
             $("#sender" + index).find(".msg_cotainer_send").html(txt_msg);
+
         } else if (sender_user == client) {
             $("#receiver").clone().removeClass('d-none').appendTo(".msg_card_body").attr("id", "receiver" + index);
             $("#receiver" + index).find(".msg_cotainer").html(txt_msg);
+
         }
     });
+
+    let sender_ele = $("#sender" + len);
+    let receiver_ele = $("#receiver" + len);
+    if (sender_ele.length) {
+        sender_ele[0].scrollIntoView();
+    } else {
+        receiver_ele[0].scrollIntoView();
+    }
     return client;
 }
 
@@ -105,15 +120,38 @@ function writeMessage(client) {
 
 
 function appendMessage(msg) {
-    
+
     let txt_msg = msg['text_msg'];
     $("#sender").clone().removeClass('d-none').appendTo(".msg_card_body").find(".msg_cotainer_send").html(txt_msg);
 }
 
 
+function keepRendering(new_msg_url, client) {
+    setInterval(function () {
+        fetch(new_msg_url)
+            .then(response => response.json())
+            .then(result => {
+
+                console.log(result.length);
+                let content_len = localStorage.getItem("content_len");
+                console.log(content_len);
+                let new_result = [];
+                if (content_len < result.length) {
+                    for(let i = content_len; i<result.length; i++){
+                        new_result.push(result[i]);
+                    }
+                    renderMessage(new_result);
+                }
+
+            })
+            .catch(err => console.log(err));
+    }, 2000);
+}
+
+
 function confirmEnter() {
 
-    var key = window.event.keyCode;
+    let key = window.event.keyCode;
     if (key === 13) {
         $("#submit_chat").click();
         return false;
