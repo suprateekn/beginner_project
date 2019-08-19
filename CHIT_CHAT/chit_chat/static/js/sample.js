@@ -33,6 +33,7 @@ function getMessage(users) {
             $(user_ids).on('click', function (event) {
 
                 let body_children = $(".msg_card_body").children();
+
                 let body_len = body_children.length;
 
                 for (i = 0; i < body_len; i++) {
@@ -40,13 +41,6 @@ function getMessage(users) {
                         $(body_children[i]).remove();
                     }
                 }
-
-
-                // body_children.forEach(function(item,index) {
-                //     if($(item).attr("class") !== 'd-none'){
-                //         $(item).remove();
-                //     }
-                // });
 
                 let element = event.currentTarget;
                 let client = $(element).attr("id");
@@ -74,6 +68,7 @@ function renderMessage(msg) {
 
     msg.forEach(function (item, index) {
         let txt_msg = item['text_msg'];
+
         let sender_user = item['sender'];
         let receiver_user = item['receiver'];
 
@@ -87,6 +82,7 @@ function renderMessage(msg) {
             $("#receiver" + index).find(".msg_cotainer").html(txt_msg);
 
         }
+
     });
 
     let sender_ele = $("#sender" + len);
@@ -103,46 +99,70 @@ function renderMessage(msg) {
 function writeMessage(client) {
 
     $("#submit_chat").on("click", function () {
+        let text_area = $("#type_msg");
+        text_area.blur();
 
-        let data = {text_msg: $("#type_msg").val(), receiver: client};
-        $("#type_msg").val("");
+        if (text_area.val() !== "") {
+            let data = {text_msg: text_area.val(), receiver: client};
+            text_area.val("");
 
-        fetch(msg_url, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {'Content-Type': 'application/json'}
-        })
-            .then(response => response.json())
-            .then(result => appendMessage(result))
-            .catch(err => console.log(err));
+            fetch(msg_url, {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {'Content-Type': 'application/json'}
+            })
+                .then(response => response.json())
+                .then(result => {
+                    let msg = [result];
+                    appendMessage(msg)
+                })
+                .catch(err => console.log(err));
+        }
     });
 }
 
 
 function appendMessage(msg) {
 
-    let txt_msg = msg['text_msg'];
-    $("#sender").clone().removeClass('d-none').appendTo(".msg_card_body").find(".msg_cotainer_send").html(txt_msg);
+    for (let i = 0; i < msg.length; i++) {
+        let txt_msg = msg[i]['text_msg'];
+
+        if (msg[i]['sender'] == user) {
+            $("#sender").clone().removeClass('d-none').appendTo(".msg_card_body").find(".msg_cotainer_send").html(txt_msg);
+            let content_length = localStorage.getItem("content_len");
+            content_length = Number(content_length) + 1;
+            localStorage.setItem("content_len", content_length);
+        } else {
+            $("#receiver").clone().removeClass('d-none').appendTo(".msg_card_body").find(".msg_cotainer").html(txt_msg);
+
+        }
+    }
+
 }
 
 
 function keepRendering(new_msg_url, client) {
+
     setInterval(function () {
         fetch(new_msg_url)
             .then(response => response.json())
             .then(result => {
 
-                console.log(result.length);
                 let content_len = localStorage.getItem("content_len");
+                let res_len = result.length;
+
+                console.log(result);
+                // console.log(result.length);
                 console.log(content_len);
                 let new_result = [];
-                if (content_len < result.length) {
-                    for(let i = content_len; i<result.length; i++){
+                if (content_len < res_len) {
+
+                    for (let i = content_len; i < res_len; i++) {
                         new_result.push(result[i]);
                     }
-                    renderMessage(new_result);
+                    appendMessage(new_result);
+                    localStorage.setItem("content_len", res_len);
                 }
-
             })
             .catch(err => console.log(err));
     }, 2000);
