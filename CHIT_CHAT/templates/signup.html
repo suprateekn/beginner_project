@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+
+    <div class="row h-100">
+        <div class="col-md-4 col-xl-3 my-auto mx-auto responsive_width">
+            <div id="signup" style="padding: 20px;">
+                <h2 class="text-center">SIGNUP</h2>
+                <hr style="border-top: solid darkblue;">
+                <div style="padding-top: 10px">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                            <p>
+                                {{ field.label_tag }}<br>
+                                {% render_field field autocomplete="new-password" class="form-control" %}
+                                {% for error in field.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                {% endfor %}
+                            </p>
+                        {% endfor %}
+                        <div style="padding-top: 20px;">
+                            <input type="submit" class="btn btn-info" value="SIGNUP">
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

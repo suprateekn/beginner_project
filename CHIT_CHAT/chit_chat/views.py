@@ -1,14 +1,13 @@
-from django.db.models import Q
-from rest_framework import generics, mixins
-from rest_framework.permissions import IsAuthenticated
-from .models import Message
 from django.contrib.auth.models import User
+from django.db.models import Q
+from rest_framework import generics
+
+from .models import Message
 from .serializers import MessagingSerializer, UserSerializer
 
 
 class MessageAPIView(generics.CreateAPIView, generics.ListAPIView):
     serializer_class = MessagingSerializer
-    authentication_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         client = self.request.GET.get('userid')

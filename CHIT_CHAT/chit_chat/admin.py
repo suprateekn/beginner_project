@@ -1,15 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-
-from .models import (UserProfile, Message)
 from django.contrib.auth.models import User
+from chit_chat.models import (UserProfile, Message)
 
 
 class ProfileInline(admin.StackedInline):
     model = UserProfile
     fk_name = 'user'
     verbose_name_plural = 'Profile'
-    # filter_horizontal = ['profile_pic']
 
 
 class CustomAdmin(UserAdmin):

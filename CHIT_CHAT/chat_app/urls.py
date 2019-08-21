@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from .views import home_page
+from .views import home_page, login_page, signup_page
 
 urlpatterns = [
-    path('', home_page),
+    path('', home_page, name='home'),
+    path('login/', login_page, name='login_page'),
+    path('signup/', signup_page, name='signup_page'),
     path('admin/', admin.site.urls),
     path('api/chit.chat/', include(('chit_chat.urls', 'chit_chat'), namespace='chit_chat')),
 ]

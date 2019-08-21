@@ -101,6 +101,8 @@ function writeMessage(client) {
     $("#submit_chat").on("click", function () {
         let text_area = $("#type_msg");
         text_area.blur();
+        let csrf_token = $('.csrf-send-msg > input[name="csrfmiddlewaretoken"]').val();
+        console.log(csrf_token);
 
         if (text_area.val() !== "") {
             let data = {text_msg: text_area.val(), receiver: client};
@@ -109,7 +111,10 @@ function writeMessage(client) {
             fetch(msg_url, {
                 method: 'POST',
                 body: JSON.stringify(data),
-                headers: {'Content-Type': 'application/json'}
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf_token
+                }
             })
                 .then(response => response.json())
                 .then(result => {
@@ -126,10 +131,12 @@ function appendMessage(msg) {
 
     for (let i = 0; i < msg.length; i++) {
         let txt_msg = msg[i]['text_msg'];
+        let content_length = localStorage.getItem("content_len");
 
         if (msg[i]['sender'] == user) {
+            console.log("hi");
             $("#sender").clone().removeClass('d-none').appendTo(".msg_card_body").find(".msg_cotainer_send").html(txt_msg);
-            let content_length = localStorage.getItem("content_len");
+
             content_length = Number(content_length) + 1;
             localStorage.setItem("content_len", content_length);
         } else {

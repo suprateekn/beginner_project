@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     'rest_framework',
     'chit_chat',
 ]
@@ -128,12 +129,13 @@ REST_FRAMEWORK = {
 
 STATIC_URL = '/static/'
 
-LOCAL_STATIC_CDN_PATH = os.path.join(os.path.dirname(BASE_DIR), 'static_cdn_test')
+# LOCAL_STATIC_CDN_PATH = os.path.join(os.path.dirname(BASE_DIR), 'static_cdn_test')
+#
+# STATIC_ROOT = os.path.join(LOCAL_STATIC_CDN_PATH, 'static')
+# STATIC_FILES_DIR = [
+#     os.path.join(BASE_DIR, 'static')
+# ]
 
-STATIC_ROOT = os.path.join(LOCAL_STATIC_CDN_PATH, 'static')
-STATIC_FILES_DIR = [
-    os.path.join(BASE_DIR, 'static')
-]
 
-MEDIA_ROOT = os.path.join(LOCAL_STATIC_CDN_PATH, 'media')
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

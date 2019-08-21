@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row h-100">
+        <div class="col-md-4 col-xl-3 my-auto mx-auto responsive_width">
+            <div id="login" style="padding: 20px;">
+                <h2 class="text-center">LOGIN</h2>
+                <hr style="border-top: solid darkblue;">
+                <div style="padding-top: 10px">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group label-style">
+                            <label for="username">Username:</label>
+                            <input type="text" class="form-control" id="username" name='username' required autocomplete="new-password">
+                        </div>
+                        <div class="form-group label-style" style="padding-top: 10px;">
+                            <label for="pwd">Password:</label>
+                            <input type="password" class="form-control" id="pwd" name='password' required autocomplete="new-password">
+                        </div>
+                        <p style="color: white; font-size: 15px;">{{ error_msg }}</p>
+                        <div style="padding-top: 20px;">
+                            <input type="submit" class="btn btn-info" value="LOGIN">
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

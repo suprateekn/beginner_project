@@ -4,5 +4,5 @@ from django.urls import path
 urlpatterns = (
     path('user/', UserAPIView.as_view(), name='list-user'),
     path('message/', MessageAPIView.as_view(), name='list-msg'),
-    path('<int:pk>/', MessageRetrieveView.as_view(), name='retrieve-msg'),
+    path('message/<int:pk>/', MessageRetrieveView.as_view(), name='retrieve-msg'),
 )
