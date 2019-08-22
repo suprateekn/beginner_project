@@ -35,6 +35,19 @@
                 </div>
                 <div class="card-body contacts_body">
                     <ui class="contacts">
+                        <li class="logged-in-user">
+                            <div class="d-flex bd-highlight">
+                                <div class="img_cont">
+                                    <img src=""
+                                         class="rounded-circle user_img"
+                                         onerror="this.src='{% static 'images/default-user-icon-4.jpg' %}'">
+                                    <span class="online_icon"></span>
+                                </div>
+                                <div class="user_info">
+                                    <span class="user_name" style="color: black"></span>
+                                </div>
+                            </div>
+                        </li>
                         <li class="d-none" id="user_details">
                             <div class="d-flex bd-highlight">
                                 <div class="img_cont">
@@ -62,7 +75,7 @@
                     <div class="d-flex bd-highlight">
                         <div class="img_cont">
                             <img src="{% static 'images/default-user-icon-4.jpg' %}"
-                                 class="rounded-circle user_img">
+                                 class="rounded-circle user_img chat-box-img">
                             <span class="online_icon"></span>
                         </div>
                         <div class="user_info">

@@ -34,14 +34,14 @@ def login_page(request):
 
 def signup_page(request):
     if request.method == 'POST':
-        print(request.FILES)
         form = SignupForm(request.POST or None, request.FILES or None)
         if form.is_valid():
             user = form.save()
             user.refresh_from_db()
-            user.UserProfile.profile_pic = form.cleaned_data.get('profile_pic')
-            user.save()
-
+            user.user_profile.profile_pic = form.cleaned_data.get('profile_pic')
+            user.user_profile.save()
+            user_pic = user.user_profile.profile_pic
+            print(user_pic)
             return redirect('login_page')
         else:
             context = {"error_msg": form.error_messages['password_mismatch'], "form": form, 'title': "SIGNUP"}

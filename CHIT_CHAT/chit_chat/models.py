@@ -5,16 +5,15 @@ from django.dispatch import receiver
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="UserProfile")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile")
     profile_pic = models.ImageField(upload_to='image/', blank=True, null=True)
 
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, raw, **kwargs):
-    if not raw:
-        if created:
-            UserProfile.objects.create(user=instance)
-        instance.UserProfile.save()
+    if created:
+        UserProfile.objects.create(user=instance)
+
 
 
 class Message(models.Model):
