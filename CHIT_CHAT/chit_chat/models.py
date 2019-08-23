@@ -15,7 +15,6 @@ def create_user_profile(sender, instance, created, raw, **kwargs):
         UserProfile.objects.create(user=instance)
 
 
-
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='sender')
     receiver = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='receiver')

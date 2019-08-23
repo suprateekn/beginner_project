@@ -3,30 +3,60 @@
 {% block content %}
 
     <div class="row h-100">
-        <div class="col-md-4 col-xl-3 my-auto mx-auto responsive_width">
+        <div class="col-md-12 col-xl-6 my-auto mx-auto responsive_width">
             <div id="signup" style="padding: 20px;">
                 <h2 class="text-center">SIGNUP</h2>
                 <hr style="border-top: solid darkblue;">
                 <div style="padding-top: 10px">
-                    <form method="POST" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data" class="row">
                         {% csrf_token %}
+                        <div class="col-md-6">
+                            {% for field in form %}
+                                {% if field.name == 'username' or field.name == 'first_name' or field.name == 'last_name' or field.name == 'email' %}
+                                    <p>
+                                        {{ field.label_tag }}<br>
+                                        {% render_field field autocomplete="new-password" class="form-control" %}
+                                        {% for error in field.errors %}
+                                            <p style="color: red">{{ error }}</p>
+                                        {% endfor %}
+                                    </p>
 
-                        {% for field in form %}
-                            <p>
-                                {{ field.label_tag }}<br>
-                                {% render_field field autocomplete="new-password" class="form-control" %}
-                                {% for error in field.errors %}
-                                    <p style="color: red">{{ error }}</p>
-                                {% endfor %}
-                            </p>
-                        {% endfor %}
-                        <div style="padding-top: 20px;">
-                            <input type="submit" class="btn btn-info" value="SIGNUP">
+                                {% endif %}
+
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            {% for field in form %}
+                                {% if field.name == 'password1' or field.name == 'password2' %}
+                                    <p>
+                                        {{ field.label_tag }}<br>
+                                        {% render_field field autocomplete="new-password" class="form-control" %}
+                                        {% for error in field.errors %}
+                                            <p style="color: red">{{ error }}</p>
+                                        {% endfor %}
+                                    </p>
+
+                                {% endif %}
+
+                                {% if field.name == 'profile_pic' %}
+
+                                    <p>
+                                        {{ field.label_tag }}<br>
+                                        <input type="file" name="profile_pic" style="width: 225px;">
+                                    </p>
+
+                                {% endif %}
+
+                            {% endfor %}
+                            <div style="padding-top: 20px; float: right;">
+                                <input type="submit" class="btn btn-info" value="SIGN UP" style="width: 225px;  height: 58px;">
+                            </div>
                         </div>
                     </form>
 
                 </div>
             </div>
         </div>
+    </div>
 
 {% endblock %}

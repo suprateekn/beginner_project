@@ -18,11 +18,11 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
-from .views import home_page, login_page, signup_page
+from chat_app.views import home_page, login_page, signup_page
 
 urlpatterns = [
-    path('', home_page, name='home'),
-    path('login/', login_page, name='login_page'),
+    path('home/', home_page, name='home'),
+    path('', login_page, name='login_page'),
     path('signup/', signup_page, name='signup_page'),
     path('admin/', admin.site.urls),
     path('api/chit.chat/', include(('chit_chat.urls', 'chit_chat'), namespace='chit_chat')),

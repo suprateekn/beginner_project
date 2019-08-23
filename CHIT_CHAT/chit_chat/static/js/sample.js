@@ -37,14 +37,15 @@ function renderUsers(users) {
     return user_id_arr;
 }
 
-function getMessage(users) {
 
+function getMessage(users) {
+    window.click_count = 0;
     users.forEach(function (item, index) {
         if (user != item) {
             let user_ids = "#" + item;
 
             $(user_ids).on('click', function (event) {
-
+                window.click_count += 1;
                 let body_children = $(".msg_card_body").children();
 
                 let body_len = body_children.length;
@@ -66,10 +67,11 @@ function getMessage(users) {
                 fetch(new_msg_url)
                     .then(response => response.json())
                     .then(result => renderMessage(result, index))
-                    .then((client) => writeMessage())
+                    .then((client) => keepRendering(new_msg_url, client))
                     .catch(err => console.log(err));
 
-                keepRendering(new_msg_url, client);
+                // keepRendering(new_msg_url, client)
+                writeMessage();
             });
         }
     });
@@ -77,17 +79,18 @@ function getMessage(users) {
 
 
 function renderMessage(msg) {
+    if (window.click_count !== 1) {
+        clearInterval(window.rendering);
+    }
+
     let content_len = msg.length;
     localStorage.setItem("content_len", content_len);
     let client = localStorage.getItem("client");
     let len = Object.keys(msg).length - 1;
     let profile_pic_arr = JSON.parse(localStorage.getItem("profile_pic_arr"))
-    // console.log(profile_pic_arr);
     let photo_index = localStorage.getItem("photo_index");
-    console.log(photo_index);
 
     if (profile_pic_arr[photo_index]) {
-        console.log($(".chat-box-img"));
         $(".chat-box-img").attr("src", profile_pic_arr[photo_index]);
     }
 
@@ -114,7 +117,7 @@ function renderMessage(msg) {
     let receiver_ele = $("#receiver" + len);
     if (sender_ele.length) {
         sender_ele[0].scrollIntoView();
-    } else {
+    } else if (receiver_ele.length) {
         receiver_ele[0].scrollIntoView();
     }
     return client;
@@ -128,7 +131,7 @@ function writeMessage() {
         text_area.blur();
         let csrf_token = $('.csrf-send-msg > input[name="csrfmiddlewaretoken"]').val();
         let client = localStorage.getItem("client");
-        console.log(client);
+
         if (text_area.val() !== "") {
             let data = {text_msg: text_area.val(), receiver: client};
             text_area.val("");
@@ -158,10 +161,8 @@ function appendMessage(msg) {
         let txt_msg = msg[i]['text_msg'];
         let content_length = localStorage.getItem("content_len");
         let client = localStorage.getItem("client");
-        // console.log(client);
-        // console.log(msg[i]['receiver']);
+
         if (msg[i]['sender'] == user && msg[i]['receiver'] == client) {
-            console.log("hi");
             $("#sender").clone().removeClass('d-none').appendTo(".msg_card_body").find(".msg_cotainer_send").html(txt_msg);
 
             content_length = Number(content_length) + 1;
@@ -177,7 +178,7 @@ function appendMessage(msg) {
 
 function keepRendering(new_msg_url, client) {
 
-    setInterval(function () {
+    window.rendering = setInterval(function () {
         fetch(new_msg_url)
             .then(response => response.json())
             .then(result => {
@@ -186,6 +187,8 @@ function keepRendering(new_msg_url, client) {
                 let res_len = result.length;
                 let client = localStorage.getItem("client");
                 // console.log(client);
+                console.log(content_len);
+                console.log(res_len);
 
 
                 let new_result = [];
@@ -194,12 +197,13 @@ function keepRendering(new_msg_url, client) {
                     for (let i = content_len; i < res_len; i++) {
                         new_result.push(result[i]);
                     }
-                    appendMessage(new_result);
                     localStorage.setItem("content_len", res_len);
+                    appendMessage(new_result);
                 }
             })
             .catch(err => console.log(err));
     }, 2000);
+
 }
 
 
