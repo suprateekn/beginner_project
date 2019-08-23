@@ -79,9 +79,10 @@ function getMessage(users) {
 
 
 function renderMessage(msg) {
-    if (window.click_count !== 1) {
-        clearInterval(window.rendering);
-    }
+    // if (window.click_count !== 1) {
+    //     clearInterval(window.rendering);
+    // }
+    clearInterval(window.rendering);
 
     let content_len = msg.length;
     localStorage.setItem("content_len", content_len);
@@ -103,11 +104,11 @@ function renderMessage(msg) {
 
         if (sender_user == user && receiver_user == client) {
             $("#sender").clone().removeClass('d-none').appendTo(".msg_card_body").attr("id", "sender" + index);
-            $("#sender" + index).find(".msg_cotainer_send").html(txt_msg);
+            $("#sender" + index).find(".msg_cotainer_send > span").html(txt_msg);
 
         } else if (sender_user == client) {
             $("#receiver").clone().removeClass('d-none').appendTo(".msg_card_body").attr("id", "receiver" + index);
-            $("#receiver" + index).find(".msg_cotainer").html(txt_msg);
+            $("#receiver" + index).find(".msg_cotainer > span").html(txt_msg);
 
         }
 
@@ -161,16 +162,19 @@ function appendMessage(msg) {
         let txt_msg = msg[i]['text_msg'];
         let content_length = localStorage.getItem("content_len");
         let client = localStorage.getItem("client");
-
+        let new_element;
         if (msg[i]['sender'] == user && msg[i]['receiver'] == client) {
-            $("#sender").clone().removeClass('d-none').appendTo(".msg_card_body").find(".msg_cotainer_send").html(txt_msg);
-
+            $("#sender").clone().removeClass('d-none').appendTo(".msg_card_body").find(".msg_cotainer_send > span").attr("id", "new_msg").html(txt_msg);
+            $("#new_msg")[0].scrollIntoView();
+            $("#new_msg").removeAttr("id");
             content_length = Number(content_length) + 1;
             localStorage.setItem("content_len", content_length);
         } else if (msg[i]['sender'] == client) {
-            $("#receiver").clone().removeClass('d-none').appendTo(".msg_card_body").find(".msg_cotainer").html(txt_msg);
-
+            $("#receiver").clone().removeClass('d-none').appendTo(".msg_card_body").find(".msg_cotainer > span").attr("id", "new_msg").html(txt_msg);
         }
+
+        $("#new_msg")[0].scrollIntoView();
+        $("#new_msg").removeAttr("id");
     }
 
 }
@@ -186,9 +190,6 @@ function keepRendering(new_msg_url, client) {
                 let content_len = localStorage.getItem("content_len");
                 let res_len = result.length;
                 let client = localStorage.getItem("client");
-                // console.log(client);
-                console.log(content_len);
-                console.log(res_len);
 
 
                 let new_result = [];
