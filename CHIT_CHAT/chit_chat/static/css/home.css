@@ -299,3 +299,12 @@ body, html {
     border-radius: 15px !important;
     background-color: rgba(0, 0, 0, 0.2) !important;
 }
+
+.no-conversation{
+    width: 500px;
+    display: inline-block;
+    padding-top: 160px;
+    color: yellow;
+    font-weight: bolder;
+    font-size: 50px;
+}

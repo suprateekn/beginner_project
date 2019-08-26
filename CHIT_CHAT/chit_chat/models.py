@@ -16,8 +16,8 @@ def create_user_profile(sender, instance, created, raw, **kwargs):
 
 
 class Message(models.Model):
-    sender = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='sender')
-    receiver = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='receiver')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='msg_sender')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='msg_receiver')
     text_msg = models.TextField(blank=True, null=True)
     sent_time = models.DateTimeField(auto_now_add=True, blank=True)
 

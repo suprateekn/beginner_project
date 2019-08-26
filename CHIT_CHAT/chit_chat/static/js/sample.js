@@ -16,10 +16,11 @@ function renderUsers(users) {
         user_id_arr.push(id);
         let display_name = item['username'];
         let profile_pic = item['profile_pic'];
+        // let last_msg = item['']
         user_profile_pic[index] = profile_pic;
 
         if (id == user) {
-            $(".logged-in-user").find(".user_info").find(".user_name").html("HELLO " + display_name);
+            $(".logged-in-user").find(".user_info").find(".user_name").html(display_name);
             if (profile_pic) {
                 $(".logged-in-user").find(".user_img").attr("src", profile_pic);
             }
@@ -27,6 +28,8 @@ function renderUsers(users) {
             let user_id = "#" + id;
             $("#user_details").clone().removeClass('d-none').appendTo("ui.contacts").attr("id", id);
             $("#" + id).find(".user_info").find(".user_name").html(display_name);
+            // $("#" + id).find(".user_info").find(".last-msg").html(display_name);
+
             if (profile_pic) {
                 $("#" + id).find(".user_img").attr("src", profile_pic);
             }
@@ -39,13 +42,11 @@ function renderUsers(users) {
 
 
 function getMessage(users) {
-    window.click_count = 0;
     users.forEach(function (item, index) {
         if (user != item) {
             let user_ids = "#" + item;
 
             $(user_ids).on('click', function (event) {
-                window.click_count += 1;
                 let body_children = $(".msg_card_body").children();
 
                 let body_len = body_children.length;
@@ -55,6 +56,9 @@ function getMessage(users) {
                         $(body_children[i]).remove();
                     }
                 }
+
+                $(".no-conversation-render").addClass("d-none");
+                $(".msg-render").removeClass("d-none");
 
 
                 let element = event.currentTarget;
@@ -70,7 +74,6 @@ function getMessage(users) {
                     .then((client) => keepRendering(new_msg_url, client))
                     .catch(err => console.log(err));
 
-                // keepRendering(new_msg_url, client)
                 writeMessage();
             });
         }
@@ -79,9 +82,6 @@ function getMessage(users) {
 
 
 function renderMessage(msg) {
-    // if (window.click_count !== 1) {
-    //     clearInterval(window.rendering);
-    // }
     clearInterval(window.rendering);
 
     let content_len = msg.length;
@@ -189,7 +189,6 @@ function keepRendering(new_msg_url, client) {
 
                 let content_len = localStorage.getItem("content_len");
                 let res_len = result.length;
-                let client = localStorage.getItem("client");
 
 
                 let new_result = [];

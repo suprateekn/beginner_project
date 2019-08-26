@@ -11,15 +11,24 @@
                         {% csrf_token %}
                         <div class="form-group label-style">
                             <label for="username">Username:</label>
-                            <input type="text" class="form-control" id="username" name='username' required autocomplete="new-password">
+                            <input type="text" class="form-control" id="username" name='username' required
+                                   autocomplete="new-password">
                         </div>
                         <div class="form-group label-style" style="padding-top: 10px;">
                             <label for="pwd">Password:</label>
-                            <input type="password" class="form-control" id="pwd" name='password' required autocomplete="new-password">
+                            <input type="password" class="form-control" id="pwd" name='password' required
+                                   autocomplete="new-password">
                         </div>
                         <p style="color: white; font-size: 15px;">{{ error_msg }}</p>
-                        <div style="padding-top: 20px;">
-                            <input type="submit" class="btn btn-info" value="LOGIN">
+                        <div>
+                            <div style="float: left; padding-top: 20px; width: 100px;">
+                                <input type="submit" class="btn btn-info" value="LOGIN">
+                            </div>
+                            <div style="float: right;">
+                                <br>
+                                <a href="signup" ><p style="color: #FFFFFF">Sign up here!</p></a>
+                            </div>
+
                         </div>
                     </form>
 

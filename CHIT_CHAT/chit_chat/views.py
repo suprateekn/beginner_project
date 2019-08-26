@@ -2,8 +2,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from rest_framework import generics
 
-from .models import Message
-from .serializers import MessagingSerializer, UserSerializer
+from chit_chat.models import Message
+from chit_chat.serializers import MessagingSerializer, UserSerializer
 
 
 class MessageAPIView(generics.CreateAPIView, generics.ListAPIView):

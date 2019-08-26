@@ -26,6 +26,20 @@
         <div class="col-md-4 col-xl-3 chat">
             <div class="card mb-sm-3 mb-md-0 contacts_card">
                 <div class="card-header">
+                    <div class="logged-in-user">
+                        <div class="d-flex bd-highlight">
+                            <div class="img_cont">
+                                <img src=""
+                                     class="rounded-circle user_img"
+                                     onerror="this.src='{% static 'images/default-user-icon-4.jpg' %}'">
+                                <span class="online_icon"></span>
+                            </div>
+                            <div class="user_info">
+                                <span class="user_name" style="color: yellow;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
                     <div class="input-group">
                         <input type="text" placeholder="Search..." name="" class="form-control search">
                         <div class="input-group-prepend">
@@ -36,20 +50,6 @@
 
                 <div class="card-body contacts_body">
                     <ui class="contacts">
-                        <li class="logged-in-user">
-                            <div class="d-flex bd-highlight">
-                                <div class="img_cont">
-                                    <img src=""
-                                         class="rounded-circle user_img"
-                                         onerror="this.src='{% static 'images/default-user-icon-4.jpg' %}'">
-                                    <span class="online_icon"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span class="user_name" style="color: yellow;"></span>
-                                </div>
-                            </div>
-                        </li>
-                        <br>
                         <li class="d-none" id="user_details">
                             <div class="d-flex bd-highlight">
                                 <div class="img_cont">
@@ -58,6 +58,7 @@
                                 </div>
                                 <div class="user_info">
                                     <span class="user_name" style="color: black"></span>
+                                    <span style="color: grey; font-size: 10px;" class="last-msg"></span>
                                 </div>
                             </div>
                         </li>
@@ -67,7 +68,20 @@
             </div>
         </div>
         <div class="col-md-8 col-xl-6 chat">
-            <div class="card">
+            <div class="card no-conversation-render">
+                <div class="card-body h-100 " style="text-align: center;">
+                    <p class="no-conversation">
+                        Hello {{ user.username }}
+                    </p>
+                    <p class="no-conversation" style="padding-top: 0px; font-size: 30px">
+                        Welcome back!!
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="card d-none msg-render">
                 <div class="card-header msg_head">
                     <form method="POST">
                         {% csrf_token %}
