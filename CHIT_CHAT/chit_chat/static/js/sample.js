@@ -1,42 +1,172 @@
 $("document").ready(function () {
+
+    window.flag = false;
     fetch(user_url)
         .then(response => response.json())
         .then(result => renderUsers(result))
-        .then(users => getMessage(users))
         .catch(err => console.log(err));
+
+
+    setInterval(function () {
+        fetch(user_url)
+            .then(response => response.json())
+            .then(result => renderUsers(result))
+            .catch(err => console.log(err));
+    }, 2000);
 
 });
 
 
+// function renderUsers(users) {
+//     let user_id_arr = [];
+//     let user_profile_pic = [];
+//     users.forEach(function (item, index) {
+//         let id = item['id'];
+//         user_id_arr.push(id);
+//         let display_name = item['username'];
+//         let profile_pic = item['profile_pic'];
+//         // let last_msg = item['']
+//         user_profile_pic[index] = profile_pic;
+//
+//         if (id == user) {
+//             $(".logged-in-user").find(".user_info").find(".user_name").html(display_name);
+//             if (profile_pic) {
+//                 $(".logged-in-user").find(".user_img").attr("src", profile_pic);
+//             }
+//         } else if (id != user) {
+//             let user_id = "#" + id;
+//             $("#user_details").clone().removeClass('d-none').appendTo("ui.contacts").attr("id", id);
+//             $("#" + id).find(".user_info").find(".user_name").html(display_name);
+//             // $("#" + id).find(".user_info").find(".last-msg").html(display_name);
+//
+//             if (profile_pic) {
+//                 $("#" + id).find(".user_img").attr("src", profile_pic);
+//             }
+//         }
+//     });
+//     localStorage.setItem("profile_pic_arr", JSON.stringify(user_profile_pic));
+//
+//     return user_id_arr;
+// }
+
+
 function renderUsers(users) {
+
     let user_id_arr = [];
     let user_profile_pic = [];
-    users.forEach(function (item, index) {
-        let id = item['id'];
-        user_id_arr.push(id);
-        let display_name = item['username'];
-        let profile_pic = item['profile_pic'];
-        // let last_msg = item['']
-        user_profile_pic[index] = profile_pic;
 
-        if (id == user) {
+    let user_len = users.length;
+    let sorted_users = null;
+    for (let i = 0; i < user_len; i++) {
+        if (users[i]['id'] == user) {
+
+            sorted_users = users[i]['last_msg'];
+            let display_name = users[i]['username'];
+            let profile_pic = users[i]['profile_pic'];
             $(".logged-in-user").find(".user_info").find(".user_name").html(display_name);
             if (profile_pic) {
                 $(".logged-in-user").find(".user_img").attr("src", profile_pic);
             }
-        } else if (id != user) {
+            break;
+        }
+    }
+
+
+    sorted_users = sorted_users.sort(function (a, b) {
+        return b.val.localeCompare(a.val);
+    });
+
+    let sorted_user_id = [];
+    let sorted_date_time = [];
+    sorted_users.forEach(function (item, index) {
+        let date = new Date(item['val']);
+        date = date.toLocaleString()
+        sorted_date_time.push(date);
+        sorted_user_id.push(item['key']);
+    });
+
+    let sorted_array = [];
+    for (let i = 0; i < sorted_user_id.length; i++) {
+        for (let j = 0; j < users.length; j++) {
+            if (users[j]['id'] === sorted_user_id[i]) {
+                sorted_array.push(users[j]);
+                users.splice(j, 1);
+            }
+        }
+    }
+
+    let final_sorted_array = sorted_array.concat(users);
+
+    let old_sorted_array = JSON.parse(localStorage.getItem("final_sorted_array"));
+
+
+    if (old_sorted_array && old_sorted_array[0]['id'] !== final_sorted_array[0]['id'] && window.flag) {
+
+
+        let body_children = $(".contacts").children();
+
+        let body_len = body_children.length;
+
+        for (let i = 0; i < body_len; i++) {
+            if ($(body_children[i]).attr("class") !== 'd-none') {
+                $(body_children[i]).remove();
+            }
+        }
+
+        user_id_arr = listUsers(final_sorted_array, user_profile_pic, sorted_date_time);
+
+
+
+        console.log(user_id_arr);
+        getMessage(user_id_arr);
+
+    }
+
+    else if (!window.flag) {
+        window.flag = true;
+
+        user_id_arr = listUsers(final_sorted_array, user_profile_pic, sorted_date_time);
+        getMessage(user_id_arr);
+    }
+
+    localStorage.setItem("final_sorted_array", JSON.stringify(final_sorted_array));
+    localStorage.setItem("profile_pic_arr", JSON.stringify(user_profile_pic));
+
+
+    return user_id_arr;
+}
+
+
+function listUsers(final_sorted_array, user_profile_pic, sorted_date_time) {
+    let user_id_arr = [];
+    final_sorted_array.forEach(function (item, index) {
+        let id = item['id'];
+        user_id_arr.push(id);
+        let display_name = item['username'];
+        let profile_pic = item['profile_pic'];
+        user_profile_pic[index] = profile_pic;
+        let last_msg_time = null;
+        if(sorted_date_time[index]) {
+            last_msg_time = sorted_date_time[index];
+        }
+        else {
+            last_msg_time = "No previous conversations"
+        }
+
+
+        if (id != user) {
             let user_id = "#" + id;
             $("#user_details").clone().removeClass('d-none').appendTo("ui.contacts").attr("id", id);
             $("#" + id).find(".user_info").find(".user_name").html(display_name);
-            // $("#" + id).find(".user_info").find(".last-msg").html(display_name);
+
+            // console.log(last_msg_time);
+            $("#" + id).find(".user_info").find(".last-msg-time").html(last_msg_time);
 
             if (profile_pic) {
                 $("#" + id).find(".user_img").attr("src", profile_pic);
             }
         }
     });
-    localStorage.setItem("profile_pic_arr", JSON.stringify(user_profile_pic));
-
     return user_id_arr;
 }
 
@@ -164,17 +294,18 @@ function appendMessage(msg) {
         let client = localStorage.getItem("client");
         let new_element;
         if (msg[i]['sender'] == user && msg[i]['receiver'] == client) {
+            console.log("1");
             $("#sender").clone().removeClass('d-none').appendTo(".msg_card_body").find(".msg_cotainer_send > span").attr("id", "new_msg").html(txt_msg);
-            $("#new_msg")[0].scrollIntoView();
-            $("#new_msg").removeAttr("id");
             content_length = Number(content_length) + 1;
             localStorage.setItem("content_len", content_length);
         } else if (msg[i]['sender'] == client) {
+            console.log("2");
             $("#receiver").clone().removeClass('d-none').appendTo(".msg_card_body").find(".msg_cotainer > span").attr("id", "new_msg").html(txt_msg);
         }
-
+        console.log("3");
         $("#new_msg")[0].scrollIntoView();
         $("#new_msg").removeAttr("id");
+
     }
 
 }

@@ -66,4 +66,15 @@ class UserSerializer(serializers.ModelSerializer):
                 last_text_dict[element['receiver']] = element['max_time']
 
         sorted_dict = sorted(last_text_dict.items(), key=operator.itemgetter(1), reverse=True)
-        return dict(sorted_dict)
+        sorted_dict = dict(sorted_dict)
+
+        final_sorted_list = []
+
+        for k, v in sorted_dict.items():
+            new_dict = {}
+            new_dict['key'] = k
+            new_dict['val'] = v
+            final_sorted_list.append(new_dict)
+            print(final_sorted_list)
+
+        return final_sorted_list
