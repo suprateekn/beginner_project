@@ -181,6 +181,7 @@ body, html {
     background-color: #82ccdd;
     padding: 10px;
     position: relative;
+    max-width: 60%;
 }
 
 .msg_cotainer_send {
@@ -191,6 +192,7 @@ body, html {
     background-color: #78e08f;
     padding: 10px;
     position: relative;
+    max-width: 60%;
 }
 
 .msg_time {
@@ -281,6 +283,7 @@ body, html {
 }
 
 #login {
+    padding: 20px;
     height: 400px;
     width: 300px;
     border-radius: 15px !important;
@@ -300,11 +303,106 @@ body, html {
     background-color: rgba(0, 0, 0, 0.2) !important;
 }
 
-.no-conversation{
+.no-conversation {
     width: 500px;
     display: inline-block;
-    padding-top: 160px;
+    padding-top: 140px;
     color: yellow;
     font-weight: bolder;
     font-size: 50px;
+}
+
+.user-list:hover {
+    cursor: pointer;
+    background-color: steelblue;
+}
+
+.background-on-select {
+    background-color: lightseagreen;
+}
+
+.logout{
+    display: none;
+    padding-top: 12px;
+    padding-right: 20px;
+}
+
+@media (max-width: 992px) {
+    #contact-display {
+        display: block;
+        padding-top: 5%;
+        height: 100%;
+        padding-bottom: 5%;
+    }
+
+    .contacts_card {
+        height: 100%;
+    }
+
+    #message-display {
+        display: none;
+        padding-top: 5%;
+        height: 100%;
+        padding-bottom: 5%;
+    }
+
+    .no-conversation-render, .msg-render {
+        height: 100%;
+    /signup/
+    }
+
+    #login {
+        margin-left: 10%;
+        width: 80%;
+    }
+
+    #signup {
+        line-height: 15px;
+        margin-left: 5%;
+        width: 90%;
+    }
+
+    .logout{
+        display: block;
+    }
+}
+
+.fa-arrow-left {
+    display: none;
+    margin-top: 10px;
+    font-size: 30px;
+    color: darkgrey;
+    float: right;
+}
+
+
+.msg_head {
+
+}
+
+.left-div, .right-div {
+    float: left;
+}
+
+.left-div {
+  width: 50%;
+}
+
+.right-div {
+  width: 50%;
+}
+
+@media (min-width: 992px) and (min-height: 1025px) {
+    #message-display, #contact-display, .no-conversation-render, .msg-render, .contacts_card{
+        height: 90%;
+        padding-top: 5%;
+
+    }
+
+    .no-conversation{
+        padding-top: 55%;
+    }
+
+}
+
 }

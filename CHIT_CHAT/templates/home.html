@@ -5,6 +5,8 @@
     <title>Chat</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
           integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -23,10 +25,14 @@
 <body>
 <div class="container-fluid h-100">
     <div class="row justify-content-center h-100">
-        <div class="col-md-4 col-xl-3 chat">
+        <div class="col-lg-4 col-xl-3 chat" id="contact-display">
             <div class="card mb-sm-3 mb-md-0 contacts_card">
                 <div class="card-header">
                     <div class="logged-in-user">
+                        <form method="POST" class="logout">
+                            {% csrf_token %}
+                            <button class="btn-info fa fa-sign-out" style="float: right;"></button>
+                        </form>
                         <div class="d-flex bd-highlight">
                             <div class="img_cont">
                                 <img src=""
@@ -39,18 +45,11 @@
                             </div>
                         </div>
                     </div>
-                    <br>
-                    <div class="input-group">
-                        <input type="text" placeholder="Search..." name="" class="form-control search">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="card-body contacts_body">
                     <ui class="contacts">
-                        <li class="d-none" id="user_details">
+                        <li class="d-none user-list" id="user_details">
                             <div class="d-flex bd-highlight">
                                 <div class="img_cont">
                                     <img src="{% static 'images/default-user-icon-4.jpg' %}"
@@ -67,8 +66,12 @@
                 <div class="card-footer"></div>
             </div>
         </div>
-        <div class="col-md-8 col-xl-6 chat">
+        <div class="col-lg-8 col-xl-6 chat" id="message-display">
             <div class="card no-conversation-render">
+                <form method="POST" style="padding-top: 12px; padding-right: 20px;">
+                    {% csrf_token %}
+                    <button class="btn-info fa fa-sign-out" style="float: right;"></button>
+                </form>
                 <div class="card-body h-100 " style="text-align: center;">
                     <p class="no-conversation">
                         Hello {{ user.username }}
@@ -83,19 +86,23 @@
 
             <div class="card d-none msg-render">
                 <div class="card-header msg_head">
-                    <form method="POST">
-                        {% csrf_token %}
-                        <button class="btn-info fa fa-sign-out" style="float: right;"></button>
-                    </form>
-                    <div class="d-flex bd-highlight">
+                    <div class="left-div d-flex bd-highlight">
                         <div class="img_cont">
                             <img src="{% static 'images/default-user-icon-4.jpg' %}"
                                  class="rounded-circle user_img chat-box-img">
                             <span class="online_icon"></span>
                         </div>
                         <div class="user_info">
-                            <span>Chat Box</span>
+                            <span class="display-chat-name">Chat Box</span>
                         </div>
+                    </div>
+                    <div class="right-div">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <button class="btn-info fa fa-sign-out" style="float: right;"></button>
+                        </form>
+                        <br>
+                        <i class="fas fa-arrow-left"></i>
                     </div>
 
                 </div>

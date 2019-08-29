@@ -1,5 +1,6 @@
 $("document").ready(function () {
 
+    window.counter = [];
     window.flag = false;
     fetch(user_url)
         .then(response => response.json())
@@ -15,39 +16,6 @@ $("document").ready(function () {
     }, 2000);
 
 });
-
-
-// function renderUsers(users) {
-//     let user_id_arr = [];
-//     let user_profile_pic = [];
-//     users.forEach(function (item, index) {
-//         let id = item['id'];
-//         user_id_arr.push(id);
-//         let display_name = item['username'];
-//         let profile_pic = item['profile_pic'];
-//         // let last_msg = item['']
-//         user_profile_pic[index] = profile_pic;
-//
-//         if (id == user) {
-//             $(".logged-in-user").find(".user_info").find(".user_name").html(display_name);
-//             if (profile_pic) {
-//                 $(".logged-in-user").find(".user_img").attr("src", profile_pic);
-//             }
-//         } else if (id != user) {
-//             let user_id = "#" + id;
-//             $("#user_details").clone().removeClass('d-none').appendTo("ui.contacts").attr("id", id);
-//             $("#" + id).find(".user_info").find(".user_name").html(display_name);
-//             // $("#" + id).find(".user_info").find(".last-msg").html(display_name);
-//
-//             if (profile_pic) {
-//                 $("#" + id).find(".user_img").attr("src", profile_pic);
-//             }
-//         }
-//     });
-//     localStorage.setItem("profile_pic_arr", JSON.stringify(user_profile_pic));
-//
-//     return user_id_arr;
-// }
 
 
 function renderUsers(users) {
@@ -80,7 +48,7 @@ function renderUsers(users) {
     let sorted_date_time = [];
     sorted_users.forEach(function (item, index) {
         let date = new Date(item['val']);
-        date = date.toLocaleString()
+        date = date.toLocaleString();
         sorted_date_time.push(date);
         sorted_user_id.push(item['key']);
     });
@@ -105,24 +73,21 @@ function renderUsers(users) {
 
         let body_children = $(".contacts").children();
 
+
         let body_len = body_children.length;
 
         for (let i = 0; i < body_len; i++) {
-            if ($(body_children[i]).attr("class") !== 'd-none') {
+            if ($(body_children[i]).attr("id") !== 'user_details') {
                 $(body_children[i]).remove();
             }
         }
 
+
         user_id_arr = listUsers(final_sorted_array, user_profile_pic, sorted_date_time);
 
-
-
-        console.log(user_id_arr);
         getMessage(user_id_arr);
 
-    }
-
-    else if (!window.flag) {
+    } else if (!window.flag) {
         window.flag = true;
 
         user_id_arr = listUsers(final_sorted_array, user_profile_pic, sorted_date_time);
@@ -130,7 +95,6 @@ function renderUsers(users) {
     }
 
     localStorage.setItem("final_sorted_array", JSON.stringify(final_sorted_array));
-    localStorage.setItem("profile_pic_arr", JSON.stringify(user_profile_pic));
 
 
     return user_id_arr;
@@ -139,87 +103,136 @@ function renderUsers(users) {
 
 function listUsers(final_sorted_array, user_profile_pic, sorted_date_time) {
     let user_id_arr = [];
+    let username_arr = [];
     final_sorted_array.forEach(function (item, index) {
+
+        let username = item['username'];
         let id = item['id'];
-        user_id_arr.push(id);
-        let display_name = item['username'];
         let profile_pic = item['profile_pic'];
-        user_profile_pic[index] = profile_pic;
         let last_msg_time = null;
-        if(sorted_date_time[index]) {
+        let display_name = item['username'];
+        user_profile_pic[index] = profile_pic;
+
+
+        user_id_arr.push(id);
+        username_arr.push(username);
+
+
+        if (sorted_date_time[index]) {
             last_msg_time = sorted_date_time[index];
-        }
-        else {
+        } else {
             last_msg_time = "No previous conversations"
         }
 
 
         if (id != user) {
-            let user_id = "#" + id;
+
             $("#user_details").clone().removeClass('d-none').appendTo("ui.contacts").attr("id", id);
             $("#" + id).find(".user_info").find(".user_name").html(display_name);
 
-            // console.log(last_msg_time);
             $("#" + id).find(".user_info").find(".last-msg-time").html(last_msg_time);
 
             if (profile_pic) {
                 $("#" + id).find(".user_img").attr("src", profile_pic);
             }
         }
+
+        if (username == $(".display-chat-name").html()) {
+            $('#' + id).addClass("background-on-select");
+        }
+
+        localStorage.setItem("profile_pic_arr", JSON.stringify(user_profile_pic));
     });
+    localStorage.setItem("username_arr", JSON.stringify(username_arr));
     return user_id_arr;
 }
 
 
 function getMessage(users) {
+    let username_arr = JSON.parse(localStorage.getItem("username_arr"));
     users.forEach(function (item, index) {
         if (user != item) {
+            let username = username_arr[index];
             let user_ids = "#" + item;
+            window.counter.push(item);
 
-            $(user_ids).on('click', function (event) {
-                let body_children = $(".msg_card_body").children();
-
-                let body_len = body_children.length;
-
-                for (let i = 0; i < body_len; i++) {
-                    if ($(body_children[i]).attr("class") !== 'd-none') {
-                        $(body_children[i]).remove();
-                    }
-                }
-
-                $(".no-conversation-render").addClass("d-none");
-                $(".msg-render").removeClass("d-none");
-
-
-                let element = event.currentTarget;
-                let client = $(element).attr("id");
-                localStorage.setItem("client", client);
-                let new_msg_url = msg_url + "?userid=" + client;
-
-                localStorage.setItem("photo_index", index);
-
-                fetch(new_msg_url)
-                    .then(response => response.json())
-                    .then(result => renderMessage(result, index))
-                    .then((client) => keepRendering(new_msg_url, client))
-                    .catch(err => console.log(err));
-
-                writeMessage();
-            });
+            $(user_ids).on({'click': (event) => clickEvents(event, index, user_ids, username)}
+            );
         }
     });
 }
 
 
-function renderMessage(msg) {
+function clickEvents(event, index, user_ids, username) {
+
+    if ($(".display-chat-name").html() == username) {
+        return false;
+    }
+
+    if ($(window).width() < 992) {
+        $("#contact-display").css("display", "none");
+        $("#message-display").css("display", "block");
+        $(".fa-arrow-left").css("display", "block");
+
+        $(".fa-arrow-left").on("click", function () {
+            $("#message-display").css("display", "none");
+            $("#contact-display").css("display", "block");
+        });
+    }
+
+    $(".contacts li").removeClass("background-on-select");
+    $(user_ids).addClass("background-on-select");
+
+    let body_children = $(".msg_card_body").children();
+
+    let body_len = body_children.length;
+
+    for (let i = 0; i < body_len; i++) {
+        if ($(body_children[i]).attr("class") !== 'd-none') {
+            $(body_children[i]).remove();
+        }
+    }
+
+    $(".no-conversation-render").addClass("d-none");
+    $(".msg-render").removeClass("d-none");
+
+
+    let element = event.currentTarget;
+    let client = $(element).attr("id");
+    localStorage.setItem("client", client);
+    let new_msg_url = msg_url + "?userid=" + client;
+
+    localStorage.setItem("photo_index", index);
+
+    fetch(new_msg_url)
+        .then(response => response.json())
+        .then((result) => renderMessage(result, index, username))
+        .then((client) => keepRendering(new_msg_url, client))
+        .catch(err => console.log(err));
+
+    writeMessage();
+}
+
+
+function renderMessage(msg, index, username) {
+
+    let client = localStorage.getItem("client");
+
+    if ($(".display-chat-name").html() == username) {
+        return client;
+    }
+
     clearInterval(window.rendering);
 
     let content_len = msg.length;
     localStorage.setItem("content_len", content_len);
-    let client = localStorage.getItem("client");
+
+
     let len = Object.keys(msg).length - 1;
-    let profile_pic_arr = JSON.parse(localStorage.getItem("profile_pic_arr"))
+    let profile_pic_arr = JSON.parse(localStorage.getItem("profile_pic_arr"));
     let photo_index = localStorage.getItem("photo_index");
+
+    $(".display-chat-name").html(username);
 
     if (profile_pic_arr[photo_index]) {
         $(".chat-box-img").attr("src", profile_pic_arr[photo_index]);
@@ -233,12 +246,10 @@ function renderMessage(msg) {
 
 
         if (sender_user == user && receiver_user == client) {
-            $("#sender").clone().removeClass('d-none').appendTo(".msg_card_body").attr("id", "sender" + index);
-            $("#sender" + index).find(".msg_cotainer_send > span").html(txt_msg);
+            $("#sender").clone().removeClass('d-none').appendTo(".msg_card_body").attr("id", "sender" + index).find(".msg_cotainer_send > span").html(txt_msg);
 
         } else if (sender_user == client) {
-            $("#receiver").clone().removeClass('d-none').appendTo(".msg_card_body").attr("id", "receiver" + index);
-            $("#receiver" + index).find(".msg_cotainer > span").html(txt_msg);
+            $("#receiver").clone().removeClass('d-none').appendTo(".msg_card_body").attr("id", "receiver" + index).find(".msg_cotainer > span").html(txt_msg);
 
         }
 
@@ -251,6 +262,7 @@ function renderMessage(msg) {
     } else if (receiver_ele.length) {
         receiver_ele[0].scrollIntoView();
     }
+
     return client;
 }
 
@@ -303,8 +315,10 @@ function appendMessage(msg) {
             $("#receiver").clone().removeClass('d-none').appendTo(".msg_card_body").find(".msg_cotainer > span").attr("id", "new_msg").html(txt_msg);
         }
         console.log("3");
-        $("#new_msg")[0].scrollIntoView();
-        $("#new_msg").removeAttr("id");
+        if ($("#new_msg").length > 0) {
+            $("#new_msg")[0].scrollIntoView();
+            $("#new_msg").removeAttr("id");
+        }
 
     }
 
@@ -312,6 +326,7 @@ function appendMessage(msg) {
 
 
 function keepRendering(new_msg_url, client) {
+
 
     window.rendering = setInterval(function () {
         fetch(new_msg_url)
